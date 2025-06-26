@@ -1,1 +1,9 @@
 .env
+
+
+__pycache__/
+*.py[cod]
+
+__init__.py[cod]
+
+__init__.py
