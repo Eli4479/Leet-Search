@@ -14,7 +14,8 @@ def insert_questions(problems):
             "tags": prob["tags"],
             "content": prob["content"],
             "original_content": prob["original_content"],
-            "embedding": prob["embedding"]
+            "embedding": prob["embedding"],
+            "id_num": int(prob["id"])
         }).execute()
 
     print(f"✅ Inserted {len(problems)} problems into Supabase.")
