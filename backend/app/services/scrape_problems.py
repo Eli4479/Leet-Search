@@ -125,7 +125,7 @@ def get_next_batch(last_fetched, problems, batch_size=30):
     return next_batch
 
 
-if __name__ == "__main__":
+def scrape_problems():
     problems = get_all_problems()
     filtered_problems = filter_problems(problems=problems)
     last_fetched = last_fetched_problem()

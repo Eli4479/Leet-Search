@@ -1,8 +1,6 @@
 import os
 import json
 
-__all__ = ['save_problems']
-
 
 def save_problems(json_problems, file_name=None):
     if file_name is None:

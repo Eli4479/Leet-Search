@@ -1,4 +1,3 @@
-__all__ = ["truncate_problem"]
 
 
 def truncate_problem(data, max_length=997):

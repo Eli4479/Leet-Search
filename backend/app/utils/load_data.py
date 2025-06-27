@@ -1,8 +1,6 @@
 import json
 from pathlib import Path
 
-__all__ = ['load_data']
-
 
 def load_data(file_name=None):
     if file_name is None:
