@@ -1,4 +1,5 @@
-from app.utils.save_data import save_problems
+from app.services.genrate_embeddings import generate_embeddings
+from app.database.last_fetched_data import get_last_fetched_question
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -6,7 +7,7 @@ import re
 import os
 
 
-def get_all_problems(categorySlug="", skip=0, limit=4000, filters={}):
+def get_all_problems(categorySlug="", skip=0, limit=10000, filters={}):
     url = 'https://leetcode.com/graphql'
     response = requests.post(url, json={
         "query": """
@@ -77,9 +78,7 @@ def get_json_problem(problems=[]):
             })
         else:
             print(
-                f"Failed to fetch problem {problem['id']}: "
-                f"{response.status_code}"
-            )
+                f"Failed to fetch problem {problem['id']}: {response.status_code}")
     return json_problems
 
 
@@ -103,18 +102,6 @@ def format_problem(problems=[]):
     return formatted_problems
 
 
-def last_fetched_problem():
-    last_fetched = 0
-    folder_path = os.path.join(os.path.dirname(os.getcwd()), "data")
-    file_path = os.path.join(folder_path, "data.json")
-    if os.path.exists(file_path):
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            if data:
-                last_fetched = int(data[-1]['id'])
-    return last_fetched
-
-
 def get_next_batch(last_fetched, problems, batch_size=30):
     next_batch = []
     for problem in problems:
@@ -128,8 +115,10 @@ def get_next_batch(last_fetched, problems, batch_size=30):
 def scrape_problems():
     problems = get_all_problems()
     filtered_problems = filter_problems(problems=problems)
-    last_fetched = last_fetched_problem()
-    next_batch = get_next_batch(last_fetched, filtered_problems)
+    last_fetched = get_last_fetched_question()
+    if last_fetched is None:
+        last_fetched = {'id_num': 0}
+    next_batch = get_next_batch(last_fetched['id_num'], filtered_problems)
     json_problems = get_json_problem(problems=next_batch)
     formatted_problems = format_problem(json_problems)
-    save_problems(formatted_problems, file_name="data.json")
+    generate_embeddings(formatted_problems)

@@ -12,4 +12,4 @@ class Problem(BaseModel):
     match_percentage: float
 
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True

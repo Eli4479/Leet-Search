@@ -1,6 +1,5 @@
 from app.utils.get_embeddings import get_embedding
 from app.database.find_k_nearest import get_questions_by_similarity_range
-import json
 from typing import List
 
 
