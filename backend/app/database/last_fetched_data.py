@@ -4,7 +4,7 @@ from app.database.supabase_client import supabase
 def get_last_fetched_question():
     result = (
         supabase
-        .from_("problems")
+        .from_("problems_bge")
         .select("id_num")
         .order("id_num", desc=True)
         .limit(1)

@@ -16,15 +16,15 @@ def get_questions_by_similarity_range(query_embedding: List[float], page: int = 
             LEAST(
                 GREATEST(
                     ROUND(
-                        ((1 - (embedding <-> '{vector_str}')) * 100)::numeric,
+                        ((1 - (embedding <=> '{vector_str}')) * 100)::numeric,
                         2
                     ),
                     0
                 ),
                 100
             ) AS match_percentage
-        FROM problems
-        ORDER BY embedding <-> '{vector_str}'
+        FROM problems_bge
+        ORDER BY embedding <=> '{vector_str}'
         OFFSET {page * limit}
         LIMIT {limit}
     """

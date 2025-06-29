@@ -1,7 +1,8 @@
 from sentence_transformers import SentenceTransformer
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = SentenceTransformer("BAAI/bge-base-en")
 
 
 def get_embedding(text: str):
-    return model.encode(text).tolist()
+    prompt = f"Represent this sentence for search: {text}"
+    return model.encode(prompt, normalize_embeddings=True).tolist()

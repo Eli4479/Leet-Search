@@ -6,7 +6,7 @@ from app.database.supabase_client import supabase
 def insert_questions(problems):
     for prob in problems:
         # Insert into Supabase
-        supabase.table("problems").insert({
+        supabase.table("problems_bge").insert({
             "id": prob["id"],
             "title": prob["title"],
             "url": prob["url"],
