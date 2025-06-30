@@ -94,6 +94,8 @@ def format_problem(problems=[]):
         formatted_problems.append({
             'id': problem['id'],
             'title': problem['title'],
+            'url': f"https://leetcode.com/problems/{problem['slug']}",
+            'paidOnly': False,
             'slug': problem['slug'],
             'tags': problem['tags'],
             'content': clean_text,
@@ -103,6 +105,9 @@ def format_problem(problems=[]):
 
 
 def get_next_batch(last_fetched, problems, batch_size=30):
+    last_fetched = int(last_fetched)-10
+    if last_fetched < 0:
+        last_fetched = 0
     next_batch = []
     for problem in problems:
         if int(problem['id']) > last_fetched:
@@ -114,7 +119,7 @@ def get_next_batch(last_fetched, problems, batch_size=30):
 
 def scrape_problems():
     problems = get_all_problems()
-    filtered_problems = filter_problems(problems=problems)
+    filtered_problems = filter_problems(problems)
     last_fetched = get_last_fetched_question()
     if last_fetched is None:
         last_fetched = {'id_num': 0}
