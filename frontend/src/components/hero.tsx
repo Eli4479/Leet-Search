@@ -82,7 +82,7 @@ export function Hero({
                         <Image
                             src={imageSrc}
                             alt={imageAlt}
-                            className="mx-auto h-full max-h-[524px] w-full max-w-5xl rounded-2xl object-cover"
+                            className="mx-auto h-full max-h-[524px] w-full max-w-5xl rounded-2xl object-contain"
                             width={1000}
                             height={524}
                             priority
