@@ -15,7 +15,8 @@ logging.basicConfig(level=logging.INFO)
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Replace with frontend URLs in production
+    # Replace with frontend URLs in production
+    allow_origins=["https://leet-search-sepia.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
