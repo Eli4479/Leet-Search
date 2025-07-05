@@ -48,13 +48,12 @@ export default function SearchPageContent() {
 
         try {
             setLoading(true);
-            const res = await axios.post(`http://127.0.0.1:8000/api/search?page=${page}`, {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/search?page=${page}`, {
                 query,
                 limit: 5,
             });
 
             if (!Array.isArray(res.data)) throw new Error("Invalid response format");
-
             setQuestions(res.data);
             toast.success("Search results fetched successfully!");
         } catch (err) {

@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
     title: "Leet-Search",
     description: "Search LeetCode problems using natural language. AI-powered semantic matching to help you find the right problem faster.",
+    icons: {
+        icon: "/icon.svg"
+    },
 };
 
 export default function RootLayout({
