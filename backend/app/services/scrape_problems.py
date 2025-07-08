@@ -24,9 +24,6 @@ def get_all_problems(categorySlug="", skip=0, limit=10000, filters={}):
       paidOnly: isPaidOnly
       title
       titleSlug
-      topicTags {
-        name
-      }
     }
   }
 }
@@ -55,14 +52,12 @@ def filter_problems(problems=[]):
                 'id': problem['frontendQuestionId'],
                 'title': problem['title'],
                 'slug': problem['titleSlug'],
-                'tags': [tag['name'] for tag in problem['topicTags']]
             })
         else:
             filtered_problems_free.append({
                 'id': problem['frontendQuestionId'],
                 'title': problem['title'],
                 'slug': problem['titleSlug'],
-                'tags': [tag['name'] for tag in problem['topicTags']]
             })
     return filtered_problems_free, filtered_problems_paid
 
@@ -78,7 +73,6 @@ def get_json_problem(problems=[]):
                 'id': problem['id'],
                 'title': problem['title'],
                 'slug': problem['slug'],
-                'tags': problem['tags'],
                 'content': response_data['content'],
             })
         else:
@@ -104,7 +98,6 @@ def format_problem(problems=[], type=False):
             'url': f"https://leetcode.com/problems/{problem['slug']}",
             'paidOnly': type,
             'slug': problem['slug'],
-            'tags': problem['tags'],
             'content': clean_text,
             'original_content': raw_html
         })

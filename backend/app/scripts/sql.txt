@@ -11,7 +11,6 @@ CREATE TABLE problems_bge (
   title TEXT,
   url TEXT,
   paid_only BOOLEAN,
-  tags TEXT[],                        -- Array of tags
   content TEXT,
   original_content TEXT,
   embedding vector(768)              -- Adjust dimension if needed

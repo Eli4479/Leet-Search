@@ -23,7 +23,7 @@ interface Question {
     content: string;
     match_percentage: number;
     original_content?: string;
-    tags?: string[];
+    paid_only?: boolean;
 }
 
 export default function SearchPageContent() {
@@ -36,7 +36,6 @@ export default function SearchPageContent() {
     const [page, setPage] = useState(initialPage);
     const [loading, setLoading] = useState(false);
 
-    // Update URL on page change
     useEffect(() => {
         const current = new URLSearchParams(Array.from(searchParams.entries()));
         current.set("page", page.toString());
@@ -57,7 +56,6 @@ export default function SearchPageContent() {
             setQuestions(res.data);
             toast.success("Search results fetched successfully!");
         } catch (err) {
-            // make a popup error message
             console.error("Error fetching data:", err);
             toast.error("Failed to fetch search results.");
         } finally {
@@ -91,35 +89,47 @@ export default function SearchPageContent() {
                     Search
                 </Button>
             </div>
+
             {loading ? (
-                <div className="space-y-4">
-                    {[...Array(5)].map((_, idx) => (
-                        <Card key={idx} className="animate-pulse">
-                            <CardContent className="p-4 space-y-3">
-                                <Skeleton className="h-6 w-2/3" />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {[...Array(6)].map((_, idx) => (
+                        <Card key={idx} className="animate-pulse w-full h-full shadow-md border border-border">
+                            <CardContent className="p-6 space-y-4">
+                                <div className="flex items-center flex-col justify-between md:flex-row">
+                                    <Skeleton className="h-6 w-1/2" />
+                                    <Skeleton className="h-4 w-16 mt-4 md:mt-0" />
+                                </div>
                                 <Skeleton className="h-4 w-full" />
-                                <Skeleton className="h-4 w-3/4" />
+                                <Skeleton className="h-4 w-4/5" />
+                                <Skeleton className="h-4 w-3/5" />
                             </CardContent>
                         </Card>
                     ))}
                 </div>
             ) : (
                 <div className="w-full px-2 sm:px-4 md:px-6 py-10">
-                    {questions.length > 0 ? (
+                    {questions.length > 0 && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {questions.map((q) => (
                                 <Card key={q.id} className="w-full h-full shadow-md border border-border">
                                     <CardContent className="p-6 space-y-4">
-                                        <div className="flex items-center flex-col justify-between md:flex-row">
-                                            <a
-                                                href={q.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-xl font-semibold text-primary underline"
-                                            >
-                                                {q.title}
-                                            </a>
-                                            <p className="text-sm text-green-600 font-semibold pt-5 md:pt-0">
+                                        <div className="flex flex-col md:flex-row md:justify-between justify-start">
+                                            <div>
+                                                <a
+                                                    href={q.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xl font-semibold text-primary hover:underline"
+                                                >
+                                                    {q.id}. {q.title}
+                                                </a>
+                                                {q.paid_only && (
+                                                    <span className="text-xl ml-2">
+                                                        🔒
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="text-md text-green-600 font-semibold pt-5 md:pt-0">
                                                 Match: {q.match_percentage?.toFixed(2)}%
                                             </p>
                                         </div>
@@ -129,29 +139,14 @@ export default function SearchPageContent() {
                                                 dangerouslySetInnerHTML={{ __html: q.original_content }}
                                             />
                                         )}
-
-                                        {q.tags && q.tags.length > 0 && (
-                                            <div className="flex flex-wrap gap-2">
-                                                {q.tags.map((tag) => (
-                                                    <span
-                                                        key={tag}
-                                                        className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium"
-                                                    >
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
                                     </CardContent>
                                 </Card>
                             ))}
                         </div>
-                    ) : null}
+                    )}
                 </div>
-
             )}
 
-            {/* Pagination */}
             {questions.length > 0 && (
                 <div className="pt-6 flex items-center justify-between flex-wrap gap-4">
                     <Pagination>
@@ -179,5 +174,3 @@ export default function SearchPageContent() {
         </div>
     );
 }
-
-// Move <Toaster /> to your app's root layout or _app.tsx/_app.js file for proper toast functionality.

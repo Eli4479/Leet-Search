@@ -1,9 +1,15 @@
 # ⚡ Leet-Search – Semantic LeetCode Search Engine
 
-A semantic search engine for LeetCode problems — built with FastAPI, Next.js, and pgvector
+> **Find LeetCode problems by meaning — not just by name.**
+
+Have you ever faced a situation where you vaguely remembered a LeetCode problem you once solved — but couldn’t recall its exact title?
+Or come across a question in an online assessment (OA) that felt _familiar_ — like a slightly tweaked version of a LeetCode problem — but no amount of keyword guessing could help you find it again?
+
+**Leet-Search** is built to solve exactly that.
+
+A semantic search engine for LeetCode problems — built with FastAPI, Next.js, and pgvector.
 
 > 🔗 **Live App**: [leet-search-sepia.vercel.app](https://leet-search-sepia.vercel.app)
-
 > 📦 **Repository**: [github.com/Eli4479/Leet-Search](https://github.com/Eli4479/Leet-Search)
 
 ---
@@ -96,14 +102,7 @@ POST /api/search?page=1
     "id": "1472",
     "title": "Design Browser History",
     "url": "https://leetcode.com/problems/design-browser-history/",
-    "tags": [
-      "Array",
-      "Linked List",
-      "Stack",
-      "Design",
-      "Doubly-Linked List",
-      "Data Stream"
-    ],
+    "paid_only": false,
     "match_percentage": 77.24,
     "content": "formated HTML content of the problem.",
     "original_content": "original HTML content of the problem."
@@ -119,7 +118,7 @@ POST /api/search?page=1
 | `id`               | LeetCode problem ID                   |
 | `title`            | Name of the problem                   |
 | `url`              | Direct LeetCode URL                   |
-| `tags`             | Problem categories                    |
+| `paid_only`        | Whether the problem is paid-only      |
 | `match_percentage` | Similarity score with query (0–100%)  |
 | `content`          | Formatted HTML content of the problem |
 | `original_content` | Original HTML content (for reference) |
@@ -244,6 +243,61 @@ cd Leet-Search
 
    Your app will run at: [http://localhost:3000](http://localhost:3000)
 
+## 📦 Populate the Database
+
+Prepare the LeetCode problem embeddings and load them into Supabase:
+
+### 1️⃣ Create the Table in Supabase
+
+- Open your Supabase project
+- Go to **SQL Editor**
+- Open the file `backend/scripts/sql.txt`
+- Copy its contents and **run the query**
+
+This will create the `problems_bge` table with the necessary columns (including `vector` type for embeddings).
+
+### 2️⃣ Edit `main.py`
+
+Open `backend/app/main.py` and **un-comment** the following line:
+
+```python
+# populate_db()
+```
+
+Change it to:
+
+```python
+populate_db()
+```
+
+### 3️⃣ Run the Backend Server
+
+```bash
+cd backend
+uvicorn app.main:app --reload
+```
+
+This will:
+
+- Fetch LeetCode problems (free + paid)
+- Format and clean problem content
+- Generate embeddings using OpenAI (or your configured model)
+- Save the output to:
+  `backend/scripts/problems.csv`
+
+### 4️⃣ Upload CSV to Supabase
+
+- Go to your Supabase **Table Editor**
+- Select the `problems_bge` table
+- Click **"Import Data"**
+- Upload the generated CSV file from:
+
+```bash
+backend/scripts/problems.csv
+```
+
+> ✅ NOTE: After populating, you have to **comment out `populate_db()` again** to avoid re-triggering on future backend runs.
+
 ### ✅ Test It Works
 
 1. Visit `http://localhost:3000`
@@ -275,3 +329,7 @@ For the best experience:
 Whether you're here to contribute, learn, or get inspired — thank you for checking out **Leet-Search**!
 
 > Built with ❤️ and ☕ by [Aryan Patel](https://github.com/Eli4479)
+
+```
+
+```

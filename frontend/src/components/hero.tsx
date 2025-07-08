@@ -6,6 +6,7 @@ import Image from "next/image";
 export interface HeroProps {
     icon?: React.ReactNode;
     heading: string;
+    subheading: string; // Optional subheading
     description: string;
     button: {
         text: string;
@@ -15,11 +16,13 @@ export interface HeroProps {
     trustText?: string;
     imageSrc?: string;
     imageAlt?: string;
+
 }
 
 export function Hero({
     icon = <Search className="size-6" />,
     heading = "Leet-Search!!! Semantic LeetCode Search Powered by AI",
+    subheading = "Stop Guessing. Start Finding.",
     description = "Stop wasting time guessing keywords...",
     button = {
         text: "Try Semantic Search",
@@ -57,6 +60,11 @@ export function Hero({
                             <h2 className="mx-auto max-w-5xl text-center text-3xl font-medium text-balance md:text-6xl">
                                 {heading}
                             </h2>
+
+                            {/* Subheading */}
+                            <h3 className="mx-auto max-w-5xl text-center text-2xl font-medium text-balance md:text-5xl">
+                                {subheading}
+                            </h3>
 
                             {/* Description */}
                             <p className="mx-auto max-w-3xl text-center text-muted-foreground md:text-lg">

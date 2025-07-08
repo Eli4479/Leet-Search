@@ -2,7 +2,7 @@ name: LeetCode Scraper (Every 3 Days)
 
 on:
   schedule:
-    - cron: "0 * * * *" # Runs hourly
+    - cron: "0 0 */3 * *" # Every 3 days at midnight UTC
   workflow_dispatch:
 
 jobs:

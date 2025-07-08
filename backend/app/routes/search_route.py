@@ -6,7 +6,7 @@ from app.controllers.search_controller import handle_search
 router = APIRouter()
 
 
-@router.post("/search", response_model=List[Problem])
+@router.post("/search")
 def search_problems(
     body: Dict[str, Any] = Body(...),
     page: int = Query(0, ge=0),

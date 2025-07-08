@@ -53,7 +53,6 @@ def get_paid_problems(problems=[]):
             'id': problem['id'],
             'title': problem['title'],
             'slug': problem['slug'],
-            'tags': problem['tags'],
             'content': clean_html
         })
     return paid_problems

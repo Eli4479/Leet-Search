@@ -1,5 +1,7 @@
+import ast
 from app.utils.get_paid_problems import get_paid_problems
 from app.utils.get_embeddings import get_embedding
+from psycopg2.extensions import adapt
 import re
 import logging
 import os
@@ -28,7 +30,7 @@ def get_all_problems():
 
     try:
         response = requests.get(download_url, timeout=10)
-        response.raise_for_status()  # Raise an error for bad status
+        response.raise_for_status()
         with open(json_path, 'w') as f:
             f.write(response.text)
             logging.info("Downloaded and saved leetcode_questions.json")
@@ -59,7 +61,6 @@ def format_problem(problems=[], type=False):
             'url': f"https://leetcode.com/problems/{problem['slug']}",
             'paidOnly': type,
             'slug': problem['slug'],
-            'tags': problem['tags'],
             'content': clean_text,
             'original_content': raw_html
         })
@@ -75,15 +76,12 @@ def filter_problems(problems=[]):
             filtered_problems_paid.append({
                 'id': problem['questionFrontendId'],
                 'title': problem['title'],
-                'slug': problem['url'].rstrip('/').split('/')[-1],
-                'tags': [tag['name'] for tag in problem['topicTags']]
-            })
+                'slug': problem['url'].rstrip('/').split('/')[-1]})
         else:
             filtered_problems_free.append({
                 'id': problem['questionFrontendId'],
                 'title': problem['title'],
                 'slug': problem['url'].rstrip('/').split('/')[-1],
-                'tags': [tag['name'] for tag in problem['topicTags']],
                 'content': problem['content'],
             })
     return filtered_problems_free, filtered_problems_paid
@@ -96,12 +94,16 @@ def save_to_csv(data, filename='problems.csv'):
     csv_path = os.path.join(os.path.dirname(__file__), filename)
     with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['id', 'id_num', 'url', 'title',
-                      'paid_only', 'tags', 'content', 'original_content', 'embedding']
+                      'paid_only', 'content', 'original_content', 'embedding']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for row in data:
             writer.writerow(row)
         logging.info(f"Saved data to {csv_path}")
+
+
+def to_postgres_array(py_list):
+    return "{" + ",".join(f'"{item}"' for item in py_list) + "}"
 
 
 def order_data(data):
@@ -113,10 +115,9 @@ def order_data(data):
             'url': f"https://leetcode.com/problems/{problem['slug']}",
             'title': problem['title'],
             'paid_only': problem['paidOnly'],
-            'tags': ', '.join(problem['tags']),
-            'content': problem['content'],
-            'original_content': problem['original_content'],
-            'embedding': json.dumps(problem['embedding'])
+            'content': problem.get('content', ''),
+            'original_content': problem.get('original_content', ''),
+            'embedding': json.dumps(problem.get('embedding', []))
         })
     return csv_data
 
@@ -125,10 +126,6 @@ def populate_db():
     logging.info("Starting database population...")
     problems = get_all_problems()
     filtered_problems_free, filtered_problems_paid = filter_problems(problems)
-    filtered_problems_free = filtered_problems_free[:5]
-    filtered_problems_paid = filtered_problems_paid[:5]
-    print(filtered_problems_free[0])
-    print(filtered_problems_paid[0])
     problems_paid_with_content = get_paid_problems(
         problems=filtered_problems_paid)
     formatted_problems_paid = format_problem(problems_paid_with_content, True)

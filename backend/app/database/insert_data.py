@@ -14,10 +14,9 @@ def insert_questions(problems):
             "title": prob["title"],
             "url": prob["url"],
             "paid_only": prob["paidOnly"],
-            "tags": prob["tags"],
-            "content": prob["content"],
-            "original_content": prob["original_content"],
-            "embedding": prob["embedding"],
+            "content": prob.get("content", ""),
+            "original_content": prob.get("original_content", ""),
+            "embedding": prob.get("embedding", []),
             "id_num": int(prob["id"])
         }, on_conflict=["id"]).execute()
     logging.info(f"Inserted {len(problems)} problems into Supabase.")

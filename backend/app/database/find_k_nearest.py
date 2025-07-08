@@ -10,9 +10,9 @@ def get_questions_by_similarity_range(query_embedding: List[float], page: int = 
             id,
             title,
             url,
-            tags,
             content,
             original_content,
+            paid_only,
             LEAST(
                 GREATEST(
                     ROUND(

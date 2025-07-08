@@ -34,4 +34,4 @@ def root():
 app.include_router(search_route.router, prefix="/api", tags=["Search"])
 
 # run initial population of the database only once then only run scraping
-# populate_db()
+populate_db()
