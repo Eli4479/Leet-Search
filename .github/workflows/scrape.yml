@@ -2,7 +2,7 @@ name: LeetCode Scraper (Every 3 Days)
 
 on:
   schedule:
-    - cron: "*/2 * * * *" # Every 2 minutes
+    - cron: "*/2 * * * *" # every 2 minutes (testing)
   workflow_dispatch:
 
 jobs:
@@ -20,10 +20,10 @@ jobs:
           python-version: "3.10"
 
       - name: Install dependencies
+        working-directory: backend
         run: |
-          cd backend
           python -m pip install --upgrade pip
-          pip install -r ../requirements.txt
+          pip install -r requirements.txt
 
       - name: Run scraper
         working-directory: backend
