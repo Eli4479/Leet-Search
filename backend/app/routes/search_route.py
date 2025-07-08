@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query, Body
-from typing import List, Dict, Any
-from app.models.problem_model import Problem
+from typing import Dict, Any
 from app.controllers.search_controller import handle_search
 
 router = APIRouter()

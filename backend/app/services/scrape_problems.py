@@ -11,7 +11,8 @@ def get_all_problems(categorySlug="", skip=0, limit=10000, filters={}):
     url = 'https://leetcode.com/graphql'
     response = requests.post(url, json={
         "query": """
-        query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
+        query problemsetQuestionList($categorySlug: String, $limit: Int, $skip:
+          Int, $filters: QuestionListFilterInput) {
   problemsetQuestionList: questionList(
     categorySlug: $categorySlug
     limit: $limit

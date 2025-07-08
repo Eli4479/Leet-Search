@@ -1,7 +1,5 @@
-import ast
 from app.utils.get_paid_problems import get_paid_problems
 from app.utils.get_embeddings import get_embedding
-from psycopg2.extensions import adapt
 import re
 import logging
 import os
@@ -24,7 +22,8 @@ def get_all_problems():
     Downloads the LeetCode problems JSON and saves it locally.
     Returns the parsed JSON content.
     """
-    download_url = "https://raw.githubusercontent.com/noworneverev/leetcode-api/main/data/leetcode_questions.json"
+    download_url = "https://raw.githubusercontent.com/noworneverev/leetcode" \
+        "-api/main/data/leetcode_questions.json"
     json_path = os.path.join(os.path.dirname(
         __file__), 'leetcode_questions.json')
 
@@ -100,10 +99,6 @@ def save_to_csv(data, filename='problems.csv'):
         for row in data:
             writer.writerow(row)
         logging.info(f"Saved data to {csv_path}")
-
-
-def to_postgres_array(py_list):
-    return "{" + ",".join(f'"{item}"' for item in py_list) + "}"
 
 
 def order_data(data):

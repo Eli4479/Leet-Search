@@ -3,7 +3,8 @@ from typing import List
 from app.database.supabase_client import supabase
 
 
-def get_questions_by_similarity_range(query_embedding: List[float], page: int = 0, limit: int = 5):
+def get_questions_by_similarity_range(query_embedding: List[float], page: int
+                                      = 0, limit: int = 5):
     vector_str = "[" + ",".join(map(str, query_embedding)) + "]"
     query = f"""
         SELECT
