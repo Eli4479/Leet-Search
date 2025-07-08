@@ -2,14 +2,15 @@
 
 > **Find LeetCode problems by meaning — not just by name.**
 
-Have you ever faced a situation where you vaguely remembered a LeetCode problem you once solved — but couldn’t recall its exact title?
-Or come across a question in an online assessment (OA) that felt _familiar_ — like a slightly tweaked version of a LeetCode problem — but no amount of keyword guessing could help you find it again?
+Have you ever faced a situation where you vaguely remembered a LeetCode problem you once solved, but couldn’t recall its exact title?
+Or come across a question in an online assessment (OA) that felt _**familiar**_ — like a slightly tweaked version of a LeetCode problem — but no amount of keyword guessing could help you find it again?
 
 **Leet-Search** is built to solve exactly that.
 
-A semantic search engine for LeetCode problems — built with FastAPI, Next.js, and pgvector.
+A semantic search engine for LeetCode problems — built with FastAPI, Next.js, and pgvector.Leet-Search understands the meaning and context behind queries, allowing users to find relevant problems based on intent rather than exact wording. Whether you're preparing for coding interviews or exploring new problem types, Leet-Search helps you discover the right problems faster and more intuitively.
 
 > 🔗 **Live App**: [leet-search-sepia.vercel.app](https://leet-search-sepia.vercel.app)
+> 
 > 📦 **Repository**: [github.com/Eli4479/Leet-Search](https://github.com/Eli4479/Leet-Search)
 
 ---
@@ -34,7 +35,7 @@ leet-search/
 │   │   ├── routes/               # API route registration
 │   │   ├── services/             # Core business logic
 │   │   ├── utils/                # Helper utility functions
-│   │   └── main.py               # FastAPI app entrypoint
+│   │   └── main.py               # FastAPI app entry point
 │   ├── .env                      # Environment variables
 │   └── requirements.txt          # Python dependencies
 │
@@ -329,7 +330,3 @@ For the best experience:
 Whether you're here to contribute, learn, or get inspired — thank you for checking out **Leet-Search**!
 
 > Built with ❤️ and ☕ by [Aryan Patel](https://github.com/Eli4479)
-
-```
-
-```
