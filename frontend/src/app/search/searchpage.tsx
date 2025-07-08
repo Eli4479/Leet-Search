@@ -35,6 +35,8 @@ export default function SearchPageContent() {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [page, setPage] = useState(initialPage);
     const [loading, setLoading] = useState(false);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [timer, setTimer] = useState(0.0);
 
     useEffect(() => {
         const current = new URLSearchParams(Array.from(searchParams.entries()));
@@ -44,9 +46,15 @@ export default function SearchPageContent() {
 
     const fetchQuestions = async () => {
         if (!query.trim()) return;
-
+        // make a stop watch timer
+        const interval = setInterval(() => {
+            setTimer((prev) => Math.round((prev + 0.1) * 10) / 10);
+        }, 100);
         try {
+            // make a function to handle the timer
+            setTimer(0);
             setLoading(true);
+            setButtonDisabled(true);
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/search?page=${page}`, {
                 query,
                 limit: 5,
@@ -59,6 +67,10 @@ export default function SearchPageContent() {
             console.error("Error fetching data:", err);
             toast.error("Failed to fetch search results.");
         } finally {
+            // clear the timer
+            clearInterval(interval);
+            setTimer(0);
+            setButtonDisabled(false);
             setLoading(false);
         }
     };
@@ -71,7 +83,6 @@ export default function SearchPageContent() {
     useEffect(() => {
         if (query) fetchQuestions();
     }, [page]);
-
     return (
         <div className="max-w-full mx-auto px-4 md:px-10 py-10 space-y-8">
             <div className="flex gap-4 items-center justify-between flex-col sm:flex-row">
@@ -85,27 +96,33 @@ export default function SearchPageContent() {
                 <Button
                     onClick={handleSearch}
                     className="self-stretch sm:self-auto w-full sm:w-auto text-base font-medium"
+                    disabled={buttonDisabled || loading}
                 >
                     Search
                 </Button>
             </div>
 
             {loading ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {[...Array(6)].map((_, idx) => (
-                        <Card key={idx} className="animate-pulse w-full h-full shadow-md border border-border">
-                            <CardContent className="p-6 space-y-4">
-                                <div className="flex items-center flex-col justify-between md:flex-row">
-                                    <Skeleton className="h-6 w-1/2" />
-                                    <Skeleton className="h-4 w-16 mt-4 md:mt-0" />
-                                </div>
-                                <Skeleton className="h-4 w-full" />
-                                <Skeleton className="h-4 w-4/5" />
-                                <Skeleton className="h-4 w-3/5" />
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+                <>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {[...Array(5)].map((_, idx) => (
+                            <Card key={idx} className="animate-pulse w-full h-full shadow-md border border-border">
+                                <CardContent className="p-6 space-y-4">
+                                    <div className="flex items-center flex-col justify-between md:flex-row">
+                                        <Skeleton className="h-6 w-1/3" />
+                                        <Skeleton className="h-4 w-16 mt-4 md:mt-0" />
+                                    </div>
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-4/5" />
+                                    <Skeleton className="h-4 w-3/5" />
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                    <div className="text-center text-sm text-muted-foreground mt-4">
+                        Loading... {timer.toFixed(1)} seconds
+                    </div>
+                </>
             ) : (
                 <div className="w-full px-2 sm:px-4 md:px-6 py-10">
                     {questions.length > 0 && (
