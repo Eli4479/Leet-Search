@@ -1,0 +1,34 @@
+name: LeetCode Scraper (Every 3 Days)
+
+on:
+  schedule:
+    - cron: "*/2 * * * *" # Every 2 minutes
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r ../requirements.txt
+
+      - name: Run scraper
+        working-directory: backend
+        run: |
+          PYTHONPATH=. python app/scripts/update_data.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

@@ -1,0 +1,35 @@
+-- Enable pgvector extension for embedding
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Drop pre-existing table
+DROP TABLE IF EXISTS problems_bge;
+
+-- Create the problems_bge table
+CREATE TABLE problems_bge (
+  id TEXT PRIMARY KEY,                -- Original LeetCode string ID
+  id_num INTEGER,                     -- Numeric version for sorting or indexing
+  title TEXT,
+  url TEXT,
+  paid_only BOOLEAN,
+  tags TEXT[],                        -- Array of tags
+  content TEXT,
+  original_content TEXT,
+  embedding vector(768)              -- Adjust dimension if needed
+);
+
+-- Drop pre-existing exec_sql RPC function (if exists)
+DROP FUNCTION IF EXISTS exec_sql(TEXT);
+
+-- Create exec_sql RPC function to run raw SQL safely and return JSON
+CREATE OR REPLACE FUNCTION exec_sql(sql TEXT)
+RETURNS JSONB
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  result JSONB;
+BEGIN
+  EXECUTE format('SELECT jsonb_agg(t) FROM (%s) t', sql)
+  INTO result;
+  RETURN COALESCE(result, '[]'::jsonb);
+END;
+$$;

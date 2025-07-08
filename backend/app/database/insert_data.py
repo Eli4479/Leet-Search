@@ -1,6 +1,9 @@
 # insert_problems.py
-
+import logging
 from app.database.supabase_client import supabase
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 def insert_questions(problems):
@@ -17,5 +20,4 @@ def insert_questions(problems):
             "embedding": prob["embedding"],
             "id_num": int(prob["id"])
         }, on_conflict=["id"]).execute()
-
-    print(f"✅ Inserted {len(problems)} problems into Supabase.")
+    logging.info(f"Inserted {len(problems)} problems into Supabase.")
