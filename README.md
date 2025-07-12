@@ -313,18 +313,6 @@ backend/scripts/problems.csv
 
 ---
 
-## ⚠️ Performance Note
-
-> ⚡ **Heads up!** The currently deployed version of Leet-Search is hosted on the **free tier of Render.com**, which may result in **slow cold starts** or **delayed responses**.
-
-For the best experience:
-
-- Set up the project **locally** using the instructions above
-
-> Running locally ensures **faster search results** and full control over the backend.
-
----
-
 ## 👋 Final Note
 
 Whether you're here to contribute, learn, or get inspired — thank you for checking out **Leet-Search**!
