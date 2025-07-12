@@ -85,7 +85,13 @@ export default function SearchPageContent() {
     }, [page]);
     return (
         <div className="max-w-full mx-auto px-4 md:px-10 py-10 space-y-8">
-            <div className="flex gap-4 items-center justify-between flex-col sm:flex-row">
+            <form
+                className="flex gap-4 items-center justify-between flex-col sm:flex-row"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSearch();
+                }}
+            >
                 <Input
                     placeholder="Enter your question..."
                     value={query}
@@ -94,13 +100,13 @@ export default function SearchPageContent() {
                     className="w-full h-24 text-lg rounded-xl px-6 py-4 shadow border border-border bg-background"
                 />
                 <Button
-                    onClick={handleSearch}
+                    type="submit"
                     className="self-stretch sm:self-auto w-full sm:w-auto text-base font-medium"
                     disabled={buttonDisabled || loading}
                 >
                     Search
                 </Button>
-            </div>
+            </form>
 
             {loading ? (
                 <>
