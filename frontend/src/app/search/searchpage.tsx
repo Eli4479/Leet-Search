@@ -85,29 +85,28 @@ export default function SearchPageContent() {
     }, [page]);
     return (
         <div className="max-w-full mx-auto px-4 md:px-10 py-10 space-y-8">
-            <form
-                className="flex gap-4 items-center justify-between flex-col sm:flex-row"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSearch();
-                }}
-            >
+            <div className="flex gap-4 items-center justify-between flex-col sm:flex-row">
                 <Input
                     placeholder="Enter your question..."
                     value={query}
                     type="text"
                     onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleSearch();
+                        }
+                    }}
                     className="w-full h-24 text-lg rounded-xl px-6 py-4 shadow border border-border bg-background"
                 />
                 <Button
-                    type="submit"
+                    onClick={handleSearch}
                     className="self-stretch sm:self-auto w-full sm:w-auto text-base font-medium"
                     disabled={buttonDisabled || loading}
                 >
                     Search
                 </Button>
-            </form>
-
+            </div>
             {loading ? (
                 <>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
