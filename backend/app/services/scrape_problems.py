@@ -25,6 +25,10 @@ def get_all_problems(categorySlug="", skip=0, limit=10000, filters={}):
       paidOnly: isPaidOnly
       title
       titleSlug
+         topicTags {
+        name
+      }
+      difficulty
     }
   }
 }
@@ -53,12 +57,16 @@ def filter_problems(problems=[]):
                 'id': problem['frontendQuestionId'],
                 'title': problem['title'],
                 'slug': problem['titleSlug'],
+                'difficulty': problem['difficulty'],
+                'topicTags': [tag['name'] for tag in problem['topicTags']],
             })
         else:
             filtered_problems_free.append({
                 'id': problem['frontendQuestionId'],
                 'title': problem['title'],
                 'slug': problem['titleSlug'],
+                'difficulty': problem['difficulty'],
+                'topicTags': [tag['name'] for tag in problem['topicTags']],
             })
     return filtered_problems_free, filtered_problems_paid
 
@@ -75,6 +83,8 @@ def get_json_problem(problems=[]):
                 'title': problem['title'],
                 'slug': problem['slug'],
                 'content': response_data['content'],
+                'difficulty': problem['difficulty'],
+                'topicTags': problem.get('topicTags', []),
             })
         else:
             logging.error(
@@ -100,7 +110,9 @@ def format_problem(problems=[], type=False):
             'paidOnly': type,
             'slug': problem['slug'],
             'content': clean_text,
-            'original_content': raw_html
+            'original_content': raw_html,
+            'difficulty': problem['difficulty'],
+            'topicTags': problem.get('topicTags', []),
         })
     return formatted_problems
 

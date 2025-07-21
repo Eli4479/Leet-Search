@@ -61,7 +61,9 @@ def format_problem(problems=[], type=False):
             'paidOnly': type,
             'slug': problem['slug'],
             'content': clean_text,
-            'original_content': raw_html
+            'original_content': raw_html,
+            'difficulty': problem['difficulty'],
+            'topicTags': problem.get('topicTags', []),
         })
     return formatted_problems
 
@@ -75,13 +77,18 @@ def filter_problems(problems=[]):
             filtered_problems_paid.append({
                 'id': problem['questionFrontendId'],
                 'title': problem['title'],
-                'slug': problem['url'].rstrip('/').split('/')[-1]})
+                'difficulty': problem['difficulty'],
+                'slug': problem['url'].rstrip('/').split('/')[-1],
+                'topicTags': [tag['name'] for tag in problem['topicTags']],
+            })
         else:
             filtered_problems_free.append({
                 'id': problem['questionFrontendId'],
                 'title': problem['title'],
                 'slug': problem['url'].rstrip('/').split('/')[-1],
                 'content': problem['content'],
+                'difficulty': problem['difficulty'],
+                'topicTags': [tag['name'] for tag in problem['topicTags']],
             })
     return filtered_problems_free, filtered_problems_paid
 
@@ -93,7 +100,7 @@ def save_to_csv(data, filename='problems.csv'):
     csv_path = os.path.join(os.path.dirname(__file__), filename)
     with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['id', 'id_num', 'url', 'title',
-                      'paid_only', 'content', 'original_content', 'embedding']
+                      'paid_only', 'content', 'original_content', 'embedding', 'difficulty', 'topictags']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for row in data:
@@ -104,6 +111,7 @@ def save_to_csv(data, filename='problems.csv'):
 def order_data(data):
     csv_data = []
     for problem in data:
+        problem['topictags'] = '@'.join(problem.get('topictags', []))
         csv_data.append({
             'id': problem['id'],
             'id_num': int(problem['id']),
@@ -112,7 +120,9 @@ def order_data(data):
             'paid_only': problem['paidOnly'],
             'content': problem.get('content', ''),
             'original_content': problem.get('original_content', ''),
-            'embedding': json.dumps(problem.get('embedding', []))
+            'embedding': json.dumps(problem.get('embedding', [])),
+            'difficulty': problem['difficulty'],
+            'topicTags': problem['topicTags'],
         })
     return csv_data
 

@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 
 def insert_questions(problems):
     for prob in problems:
-        # Insert into Supabase
+        prob['topicTags'] = '@'.join(prob.get('topicTags', []))
         supabase.table("problems_bge").upsert({
             "id": prob["id"],
             "title": prob["title"],
@@ -17,6 +17,8 @@ def insert_questions(problems):
             "content": prob.get("content", ""),
             "original_content": prob.get("original_content", ""),
             "embedding": prob.get("embedding", []),
-            "id_num": int(prob["id"])
+            "id_num": int(prob["id"]),
+            "difficulty": prob["difficulty"],
+            "topictags": prob["topicTags"]
         }, on_conflict=["id"]).execute()
     logging.info(f"Inserted {len(problems)} problems into Supabase.")

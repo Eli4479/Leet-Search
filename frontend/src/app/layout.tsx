@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Geist, Geist_Mono } from "next/font/google";
 import React from "react";
 import { Toaster } from "sonner";
@@ -35,6 +36,7 @@ export default function RootLayout({
                 className={`min-h-screen bg-background font-sans antialiased ${geistSans.variable} ${geistMono.variable}`}
             >
                 {children}
+                <Analytics />
                 <Toaster position="top-right" richColors />
             </body>
         </html>

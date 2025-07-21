@@ -13,7 +13,9 @@ CREATE TABLE problems_bge (
   paid_only BOOLEAN,
   content TEXT,
   original_content TEXT,
-  embedding vector(768)              -- Adjust dimension if needed
+  embedding vector(768),              -- Adjust dimension if needed
+  difficulty TEXT,
+  topictags TEXT
 );
 
 -- Drop pre-existing exec_sql RPC function (if exists)

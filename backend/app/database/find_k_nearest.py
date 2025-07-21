@@ -14,6 +14,8 @@ def get_questions_by_similarity_range(query_embedding: List[float], page: int
             content,
             original_content,
             paid_only,
+            difficulty,
+            topictags,
             LEAST(
                 GREATEST(
                     ROUND(

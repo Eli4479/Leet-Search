@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge"
 import {
     Pagination,
     PaginationContent,
@@ -24,6 +25,8 @@ interface Question {
     match_percentage: number;
     original_content?: string;
     paid_only?: boolean;
+    difficulty?: string;
+    topictags?: string;
 }
 
 export default function SearchPageContent() {
@@ -151,8 +154,19 @@ export default function SearchPageContent() {
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-md text-green-600 font-semibold pt-5 md:pt-0">
+                                            <p className="text-md text-green-600 font-semibold py-5 md:pt-0">
                                                 Match: {q.match_percentage?.toFixed(2)}%
+                                            </p>
+                                            <p className="text-md text-muted-foreground">
+                                                {q.difficulty === "Easy" ? (
+                                                    <Badge variant="easy">Easy</Badge>
+                                                ) : q.difficulty === "Medium" ? (
+                                                    <Badge variant="medium">Medium</Badge>
+                                                ) : q.difficulty === "Hard" ? (
+                                                    <Badge variant="hard">Hard</Badge>
+                                                ) : (
+                                                    <Badge>Unknown</Badge>
+                                                )}
                                             </p>
                                         </div>
                                         {q.original_content && (
@@ -160,6 +174,15 @@ export default function SearchPageContent() {
                                                 className="text-base p-4 bg-muted rounded-lg border border-border transition-all duration-200 leading-relaxed overflow-x-hidden whitespace-normal break-words"
                                                 dangerouslySetInnerHTML={{ __html: q.original_content }}
                                             />
+                                        )}
+                                        {q.topictags && (
+                                            <div className="flex flex-wrap gap-2 mt-2">
+                                                {q.topictags.split("@").map((tag, index) => (
+                                                    <Badge key={index} variant="tags">
+                                                        {tag.trim()}
+                                                    </Badge>
+                                                ))}
+                                            </div>
                                         )}
                                     </CardContent>
                                 </Card>
