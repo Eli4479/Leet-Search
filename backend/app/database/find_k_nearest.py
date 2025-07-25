@@ -3,8 +3,7 @@ from typing import List
 from app.database.supabase_client import supabase
 
 
-def get_questions_by_similarity_range(query_embedding: List[float], page: int
-                                      = 0, limit: int = 5):
+def get_questions_by_similarity_range(query_embedding: List[float]):
     vector_str = "[" + ",".join(map(str, query_embedding)) + "]"
     query = f"""
         SELECT
@@ -28,8 +27,6 @@ def get_questions_by_similarity_range(query_embedding: List[float], page: int
             ) AS match_percentage
         FROM problems_bge
         ORDER BY embedding <=> '{vector_str}'
-        OFFSET {page * limit}
-        LIMIT {limit}
     """
     result = supabase.rpc('exec_sql', {"sql": query}).execute()
     if result.data:

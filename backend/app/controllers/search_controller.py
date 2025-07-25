@@ -1,10 +1,9 @@
 from app.utils.get_embeddings import get_embedding
 from app.database.find_k_nearest import get_questions_by_similarity_range
-from typing import List
 from app.utils.simplify_statement import simplify_question
 
 
-def handle_search(embedding: List[float], limit: int = 5, page: int = 0):
+def handle_search(question):
     """
     Handles the search logic by querying the database for similar problems
     based on the provided embedding.
@@ -18,11 +17,11 @@ def handle_search(embedding: List[float], limit: int = 5, page: int = 0):
         List[Problem]: A list of Problem objects matching the search criteria.
     """
     # Get the embedding for the problem description
-    simplified_text = simplify_question(str(embedding))
+    simplified_text = simplify_question(str(question))
     problem_embedding = get_embedding(simplified_text)
     # Query the database for similar problems
     similar_problems = get_questions_by_similarity_range(
-        query_embedding=problem_embedding, page=page, limit=limit
+        query_embedding=problem_embedding
     )
     if not similar_problems:
         raise Exception("No similar problems found")

@@ -36,6 +36,7 @@ export default function SearchPageContent() {
 
     const [query, setQuery] = useState("");
     const [questions, setQuestions] = useState<Question[]>([]);
+    const [PaginationQuestions, setPaginationQuestions] = useState<Question[]>([]);
     const [page, setPage] = useState(initialPage);
     const [loading, setLoading] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -58,13 +59,13 @@ export default function SearchPageContent() {
             setTimer(0);
             setLoading(true);
             setButtonDisabled(true);
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/search?page=${page}`, {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/search`, {
                 query,
-                limit: 5,
             });
-
             if (!Array.isArray(res.data)) throw new Error("Invalid response format");
             setQuestions(res.data);
+            setPage(0); // reset page to 0 on new search
+            setPaginationQuestions(res.data.slice(0, 5)); // set initial pagination
             toast.success("Search results fetched successfully!");
         } catch (err) {
             console.error("Error fetching data:", err);
@@ -79,12 +80,15 @@ export default function SearchPageContent() {
     };
 
     const handleSearch = () => {
-        setPage(0);
         fetchQuestions();
     };
 
     useEffect(() => {
-        if (query) fetchQuestions();
+        if (query.trim()) {
+            setPaginationQuestions(
+                questions.slice(page * 5, (page + 1) * 5)
+            );
+        }
     }, [page]);
     return (
         <div className="max-w-full mx-auto px-4 md:px-10 py-10 space-y-8">
@@ -133,9 +137,9 @@ export default function SearchPageContent() {
                 </>
             ) : (
                 <div className="w-full px-2 sm:px-4 md:px-6 py-10">
-                    {questions.length > 0 && (
+                    {PaginationQuestions.length > 0 && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            {questions.map((q) => (
+                            {PaginationQuestions.map((q) => (
                                 <Card key={q.id} className="w-full h-full shadow-md border border-border">
                                     <CardContent className="p-6 space-y-4">
                                         <div className="flex flex-col md:flex-row md:justify-between justify-start">
@@ -199,7 +203,7 @@ export default function SearchPageContent() {
                             <PaginationItem>
                                 <PaginationPrevious
                                     onClick={() => {
-                                        if (page > 0) setPage((p) => p - 1);
+                                        if (questions.length > 0) setPage((p) => p - 1);
                                     }}
                                     className={page === 0 ? "pointer-events-none opacity-50" : ""}
                                 />
@@ -209,6 +213,7 @@ export default function SearchPageContent() {
                                     onClick={() => {
                                         if (questions.length > 0) setPage((p) => p + 1);
                                     }}
+                                    className={questions.length <= (page + 1) * 5 ? "pointer-events-none opacity-50" : ""}
                                 />
                             </PaginationItem>
                         </PaginationContent>
