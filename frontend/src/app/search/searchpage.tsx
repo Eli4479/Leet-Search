@@ -78,7 +78,14 @@ export default function SearchPageContent() {
             setLoading(false);
         }
     };
-
+    const handleGetSolution = async (id: string) => {
+        try {
+            window.open(`https://leetcode.doocs.org/lc/${id}`, "_blank");
+        } catch (err) {
+            console.error("Error navigating to solution:", err);
+            toast.error("Failed to navigate to solution.");
+        }
+    };
     const handleSearch = () => {
         fetchQuestions();
     };
@@ -173,6 +180,10 @@ export default function SearchPageContent() {
                                                 )}
                                             </p>
                                         </div>
+                                        <Button
+                                            variant="solution"
+                                            onClick={() => handleGetSolution(q.id)}
+                                        >Get Solution</Button>
                                         {q.original_content && (
                                             <div
                                                 className="text-base p-4 bg-muted rounded-lg border border-border transition-all duration-200 leading-relaxed overflow-x-hidden whitespace-normal break-words"
@@ -194,33 +205,36 @@ export default function SearchPageContent() {
                         </div>
                     )}
                 </div>
-            )}
+            )
+            }
 
-            {questions.length > 0 && (
-                <div className="pt-6 flex items-center justify-between flex-wrap gap-4">
-                    <Pagination>
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious
-                                    onClick={() => {
-                                        if (questions.length > 0) setPage((p) => p - 1);
-                                    }}
-                                    className={page === 0 ? "pointer-events-none opacity-50" : ""}
-                                />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext
-                                    onClick={() => {
-                                        if (questions.length > 0) setPage((p) => p + 1);
-                                    }}
-                                    className={questions.length <= (page + 1) * 5 ? "pointer-events-none opacity-50" : ""}
-                                />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
-                    <span className="text-sm text-muted-foreground">Page {page + 1}</span>
-                </div>
-            )}
-        </div>
+            {
+                questions.length > 0 && (
+                    <div className="pt-6 flex items-center justify-between flex-wrap gap-4">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        onClick={() => {
+                                            if (questions.length > 0) setPage((p) => p - 1);
+                                        }}
+                                        className={page === 0 ? "pointer-events-none opacity-50" : ""}
+                                    />
+                                </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationNext
+                                        onClick={() => {
+                                            if (questions.length > 0) setPage((p) => p + 1);
+                                        }}
+                                        className={questions.length <= (page + 1) * 5 ? "pointer-events-none opacity-50" : ""}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                        <span className="text-sm text-muted-foreground">Page {page + 1}</span>
+                    </div>
+                )
+            }
+        </div >
     );
 }
