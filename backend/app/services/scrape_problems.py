@@ -1,10 +1,11 @@
 import logging
-from app.services.genrate_embeddings import generate_embeddings
+import re
+
+import requests
 from app.database.last_fetched_data import get_last_fetched_question
+from app.services.genrate_embeddings import generate_embeddings
 from app.utils.get_paid_problems import get_paid_problems
 from bs4 import BeautifulSoup
-import requests
-import re
 
 
 def get_all_problems(categorySlug="", skip=0, limit=10000, filters={}):
@@ -117,8 +118,8 @@ def format_problem(problems=[], type=False):
     return formatted_problems
 
 
-def get_next_batch(last_fetched, problems, batch_size=30):
-    last_fetched = int(last_fetched)-10
+def get_next_batch(last_fetched, problems, batch_size=50):
+    last_fetched = int(last_fetched)-30
     if last_fetched < 0:
         last_fetched = 0
     next_batch = []
