@@ -1,9 +1,10 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.routes import search_route
 import logging
 
+from app.routes import search_route
 from app.scripts.populate_db import populate_db
+from app.services.scrape_problems import scrape_problems
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize FastAPI app
 app = FastAPI(title="LeetCode Vector Search API", version="1.0")
