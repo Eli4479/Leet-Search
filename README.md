@@ -9,7 +9,7 @@ Or come across a question in an online assessment (OA) that felt _**familiar**_ 
 
 A semantic search engine for LeetCode problems — built with FastAPI, Next.js, and pgvector.Leet-Search understands the meaning and context behind queries, allowing users to find relevant problems based on intent rather than exact wording. Whether you're preparing for coding interviews or exploring new problem types, Leet-Search helps you discover the right problems faster and more intuitively.
 
-> 🔗 **Live App**: [leet-search-sepia.vercel.app](https://leet-search-sepia.vercel.app)
+> 🔗 **Live App**: [leet-search-gray.vercel.app](https://leet-search-gray.vercel.app/)
 > 
 > 📦 **Repository**: [github.com/Eli4479/Leet-Search](https://github.com/Eli4479/Leet-Search)
 
